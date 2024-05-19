@@ -7,19 +7,18 @@ import {API, HEADER, MESSAGE} from "@Const";
 
 const userInfoData = {
   "userID": 4,
-  "fullName": "Nguyễn Văn Vinh",
+  "fullName": "Bùi Minh Hoạt",
   "email": "khachhang@gmail.com",
   "hashedPassword": null,
   "phoneNumber": "09090909",
   "gender": "Nam",
   "dateBirthday": "1933-02-03",
-  "avatarPath": "https://iili.io/J5nNDS1.jpg",
+  "avatarPath": "https://iili.io/J5HNvHP.jpg",
   "isAdmin": false
 };
 
 const ProfileMenu = ({openModal}) => {
-  const [cookies] = useCookies(['access_token']);
-  const accessToken = cookies.access_token;
+  const accessToken = true;
 
   const logout = useLogout();
 

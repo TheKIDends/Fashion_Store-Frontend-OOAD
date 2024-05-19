@@ -19,13 +19,13 @@ import {toast} from "react-toastify";
 
 const userInfoData = {
   "userID": 4,
-  "fullName": "Nguyễn Văn Vinh",
+  "fullName": "Bùi Minh Hoạt",
   "email": "khachhang@gmail.com",
   "hashedPassword": null,
   "phoneNumber": "09090909",
   "gender": "Nam",
   "dateBirthday": "1933-02-03",
-  "avatarPath": "https://iili.io/J5nNDS1.jpg",
+  "avatarPath": "https://iili.io/J5HNvHP.jpg",
   "isAdmin": false
 };
 

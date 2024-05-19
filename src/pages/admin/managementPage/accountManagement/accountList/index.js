@@ -32,7 +32,7 @@ const userInfoData = [
   {
     "userID": 1,
     "fullName": "Bùi Minh Hoạt",
-    "email": "210200326@vnu.edu.vn",
+    "email": "official.buiminhhoat@gmail.com",
     "hashedPassword": null,
     "phoneNumber": "09123456789",
     "gender": "Nam",
@@ -84,17 +84,6 @@ const userInfoData = [
     "avatarPath": "https://iili.io/J5HMiyG.md.jpg",
     "isAdmin": false
   },
-  {
-    "userID": 4,
-    "fullName": "Nguyễn Văn Vinh",
-    "email": "admin@gmail.com",
-    "hashedPassword": null,
-    "phoneNumber": "09090909",
-    "gender": "Nam",
-    "dateBirthday": "1933-02-03",
-    "avatarPath": "https://iili.io/J5nNDS1.jpg",
-    "isAdmin": true
-  }
 ];
 
 const AccountListPage = () => {

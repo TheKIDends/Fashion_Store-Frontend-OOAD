@@ -43,8 +43,8 @@ const ordersData = [
     "totalAmount": 249000,
     "orderStatus": "Đã xác nhận",
     "userID": 4,
-    "recipientName": "Nguyễn Văn Vinh",
-    "recipientPhone": "090909090",
+    "recipientName": "Bùi Minh Hoạt",
+    "recipientPhone": "0912345678",
     "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
     "orderDetails": [
       {
@@ -59,8 +59,8 @@ const ordersData = [
         "totalPrice": 249000
       }
     ],
-    "fullName": "Nguyễn Văn Vinh",
-    "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    "fullName": "Bùi Minh Hoạt",
+    "avatarPath": "https://iili.io/J5HNvHP.jpg"
   },
   {
     "orderID": 20,
@@ -68,8 +68,8 @@ const ordersData = [
     "totalAmount": 1187000,
     "orderStatus": "Chờ xác nhận",
     "userID": 4,
-    "recipientName": "Nguyễn Văn Vinh",
-    "recipientPhone": "090909090",
+    "recipientName": "Bùi Minh Hoạt",
+    "recipientPhone": "0912345678",
     "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
     "orderDetails": [
       {
@@ -95,8 +95,8 @@ const ordersData = [
         "totalPrice": 938000
       }
     ],
-    "fullName": "Nguyễn Văn Vinh",
-    "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    "fullName": "Bùi Minh Hoạt",
+    "avatarPath": "https://iili.io/J5HNvHP.jpg"
   },
   {
     "orderID": 21,
@@ -104,8 +104,8 @@ const ordersData = [
     "totalAmount": 799000,
     "orderStatus": "Hoàn thành",
     "userID": 4,
-    "recipientName": "Nguyễn Văn Vinh",
-    "recipientPhone": "090909090",
+    "recipientName": "Bùi Minh Hoạt",
+    "recipientPhone": "0912345678",
     "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
     "orderDetails": [
       {
@@ -120,8 +120,8 @@ const ordersData = [
         "totalPrice": 799000
       }
     ],
-    "fullName": "Nguyễn Văn Vinh",
-    "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    "fullName": "Bùi Minh Hoạt",
+    "avatarPath": "https://iili.io/J5HNvHP.jpg"
   },
   {
     "orderID": 22,
@@ -129,8 +129,8 @@ const ordersData = [
     "totalAmount": 2596000,
     "orderStatus": "Chờ xác nhận",
     "userID": 4,
-    "recipientName": "Nguyễn Văn Vinh",
-    "recipientPhone": "090909090",
+    "recipientName": "Bùi Minh Hoạt",
+    "recipientPhone": "0912345678",
     "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
     "orderDetails": [
       {
@@ -145,8 +145,8 @@ const ordersData = [
         "totalPrice": 2596000
       }
     ],
-    "fullName": "Nguyễn Văn Vinh",
-    "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    "fullName": "Bùi Minh Hoạt",
+    "avatarPath": "https://iili.io/J5HNvHP.jpg"
   },
   {
     "orderID": 23,
@@ -154,8 +154,8 @@ const ordersData = [
     "totalAmount": 3386000,
     "orderStatus": "Đang giao hàng",
     "userID": 4,
-    "recipientName": "Nguyễn Văn Vinh",
-    "recipientPhone": "090909090",
+    "recipientName": "Bùi Minh Hoạt",
+    "recipientPhone": "0912345678",
     "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
     "orderDetails": [
       {
@@ -192,8 +192,8 @@ const ordersData = [
         "totalPrice": 1798000
       }
     ],
-    "fullName": "Nguyễn Văn Vinh",
-    "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    "fullName": "Bùi Minh Hoạt",
+    "avatarPath": "https://iili.io/J5HNvHP.jpg"
   }
 ];
 

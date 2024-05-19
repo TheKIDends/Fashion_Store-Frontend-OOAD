@@ -29,8 +29,8 @@ const ProfileEditAddress = () => {
     {
       "addressID": 5,
       "usersID": 4,
-      "recipientName": "Nguyễn Văn Vinh",
-      "recipientPhone": "090909090",
+      "recipientName": "Bùi Minh Hoạt",
+      "recipientPhone": "0912345678",
       "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
       "isDefault": true
     },

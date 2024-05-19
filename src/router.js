@@ -15,7 +15,6 @@ import DoNotHavePermissionPage from "./pages/error/doNotHavePermissionPage";
 import {toast} from "react-toastify";
 import {useCookies} from "react-cookie";
 import ManagementPage from "./pages/admin/managementPage";
-import {API, MESSAGE} from "./utils/const";
 
 const userRouters =  [
     {
