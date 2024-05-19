@@ -5272,7 +5272,7 @@ const CategoryPage = ({keyword}) => {
   const categoryID = queryParams.categoryID;
 
   const [numberProduct, setNumberProduct] = useState(NUMBER_PRODUCT_LIMIT);
-  const [productsData, setProductsData] = useState({});
+  const [productsData, setProductsData] = useState(categoriesData);
   const [searchValue, setSearchValue] = useState("");
   const [isError, setIsError] = useState(false);
 
