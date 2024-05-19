@@ -81,13 +81,11 @@ const Menu = () => {
             <div>
               <div className="text navigate-text pointer-cursor"
                    onClick = {() => {
-                       if (menuItem.text === PROFILE_PAGE.MENU_ITEMS.LOGOUT) {
-                          logout().then(r => {});
-                          return;
+                       if (menuItem.text !== PROFILE_PAGE.MENU_ITEMS.LOGOUT) {
+                           navigate(menuItem.link, {
+                               state: { scrolling: SCROLLING.SMOOTH },
+                           });
                        }
-                       navigate(menuItem.link, {
-                          state: { scrolling: SCROLLING.SMOOTH },
-                       });
                    }}
               >
                 {menuItem.text}

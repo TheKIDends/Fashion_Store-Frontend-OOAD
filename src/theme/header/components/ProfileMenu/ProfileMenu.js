@@ -71,7 +71,7 @@ const ProfileMenu = ({openModal}) => {
                     <a href={`/profile/change-password?userID=${userID}`}>{ HEADER.PROFILE_MENU.CHANGE_PASSWORD }</a>
                   </li>
                   <li className="logout">
-                    <a onClick={() => {logout().then(r => {})}}>{ HEADER.PROFILE_MENU.LOGOUT }</a>
+                    <a>{ HEADER.PROFILE_MENU.LOGOUT }</a>
                   </li>
                 </ul>
               </div>

@@ -18,6 +18,116 @@ import AddressSection from "../components/AddressSection/AddressSection";
 import {ScrollToTop} from '@Utils';
 import {API, BREADCRUMB, CHECKOUT_PAGE, ERROR, IMAGE_URL, MESSAGE} from "@Const";
 
+const checkoutData = {
+  "productID": 108,
+  "productName": "Quần Kaki Dài Nam, Đứng Phom, Tôn Dáng",
+  "productPrice": 649000,
+  "productDescription": "Quần Kaki Dài Nam, Đứng Phom, Tôn Dáng nổi bật với kiểu dáng Slim fit vừa vặn, tôn dáng mà vẫn đảm bảo cảm giác thoải mái khi mặc. Độ dài quần vừa phải, bảng màu đâ dạng, phù hợp với mọi lứa tuổi. Với chất liệu 97% Cotton, quần dài kaki giúp giải quyết nỗi lo nóng bí, khó khăn khi vận động, nhất là trong những ngày tiết trời mùa hè oi bức. Đặc biệt, việc bổ sung thêm 3% thành phần Spandex giúp nâng cao trải nghiệm về độ co giãn, đem tới cảm giác thoải mái khi mặc. Đây là một trong những mẫu quần công sở bán chạy nhất tại 5S Fashion mà các chàng trai không nên bỏ lỡ.",
+  "productImages": [
+    {
+      "imageID": 540,
+      "productID": 108,
+      "imagePath": "https://iili.io/JRLylZ7.jpg"
+    },
+    {
+      "imageID": 541,
+      "productID": 108,
+      "imagePath": "https://iili.io/JRLy1n9.jpg"
+    },
+    {
+      "imageID": 542,
+      "productID": 108,
+      "imagePath": "https://iili.io/JRLyEGe.jpg"
+    },
+    {
+      "imageID": 543,
+      "productID": 108,
+      "imagePath": "https://iili.io/JRLyV3b.jpg"
+    },
+    {
+      "imageID": 544,
+      "productID": 108,
+      "imagePath": "https://iili.io/JRLyWaj.jpg"
+    }
+  ],
+  "productSizes": [
+    {
+      "sizeID": 397,
+      "productID": 108,
+      "sizeName": "S"
+    },
+    {
+      "sizeID": 398,
+      "productID": 108,
+      "sizeName": "M"
+    },
+    {
+      "sizeID": 399,
+      "productID": 108,
+      "sizeName": "L"
+    },
+    {
+      "sizeID": 400,
+      "productID": 108,
+      "sizeName": "XL"
+    },
+    {
+      "sizeID": 401,
+      "productID": 108,
+      "sizeName": "2XL"
+    }
+  ],
+  "productQuantities": [
+    {
+      "quantityID": 397,
+      "productID": 108,
+      "sizeID": 397,
+      "quantity": 45
+    },
+    {
+      "quantityID": 398,
+      "productID": 108,
+      "sizeID": 398,
+      "quantity": 43
+    },
+    {
+      "quantityID": 399,
+      "productID": 108,
+      "sizeID": 399,
+      "quantity": 94
+    },
+    {
+      "quantityID": 400,
+      "productID": 108,
+      "sizeID": 400,
+      "quantity": 29
+    },
+    {
+      "quantityID": 401,
+      "productID": 108,
+      "sizeID": 401,
+      "quantity": 47
+    }
+  ],
+  "category": {
+    "categoryID": 9,
+    "categoryName": "Quần Dài Kaki",
+    "parentCategoryID": 5,
+    "imagePath": "https://iili.io/J5HXNyu.webp",
+    "products": null,
+    "subCategories": null
+  },
+  "parentCategory": {
+    "categoryID": 5,
+    "categoryName": "Quần Nam",
+    "parentCategoryID": null,
+    "imagePath": "https://iili.io/JR4gFGs.md.png",
+    "products": null,
+    "subCategories": null
+  },
+  "quantitySold": 5
+};
+
 const CheckoutPage = () => {
   const [cookies] = useCookies(['access_token']);
   const accessToken = cookies.access_token;
@@ -41,165 +151,11 @@ const CheckoutPage = () => {
 
   const [loading, setLoading] = useState(true);
   const newProduct = useRef(null);
-  // let newProduct;
-
-
-  const handleIncreaseAmount = () => {
-    let productQuantities = 1;
-    if (product.productQuantities.find((quantity) => quantity.sizeID === selectedSizeID)) {
-      productQuantities = product.productQuantities.find((quantity) => quantity.sizeID === selectedSizeID).quantity
-    }
-
-    // setAmount(Math.min(amount + 1, productQuantities));
-
-    if (amount < productQuantities) {
-      setAmount(amount + 1);
-    } else {
-      toast.warn(MESSAGE.INSUFFICIENT_QUANTITY);
-    }
-  }
-
-  const handleDecreaseAmount = () => {
-    setAmount(amount-1);
-  }
-
-  const handleCloseButton = () => {
-    setAmount(0);
-  }
-
-  const handleChooseSize = (sizeID) => {
-    // setAmount(1);
-    setSelectedSizeID(sizeID);
-
-    let productQuantities = 1;
-    if (product.productQuantities.find((quantity) => quantity.sizeID === sizeID)) {
-      productQuantities = product.productQuantities.find((quantity) => quantity.sizeID === sizeID).quantity
-    }
-    // console.log(sizeID);
-    // console.log(productQuantities);
-    setAmount(Math.min(amount, productQuantities));
-  }
-
-  const handlePurchase = async () => {
-    if (accessToken === undefined) {
-      toast.warn(MESSAGE.PLEASE_LOGIN);
-      return;
-    } else if (selectedAddress.addressID === undefined) {
-      toast.warn(MESSAGE.MISSING_DELIVERY_ADDRESS);
-      return;
-    }
-
-    await fetchData();
-
-    let shouldMakeOrder = true;
-
-    if (checkQuantity() === true) {
-      toast.warn(MESSAGE.REVIEW_CART);
-      shouldMakeOrder = false;
-    }
-
-    if (shouldMakeOrder) {
-      makeOrder();
-    }
-  }
-
-
-  const checkQuantity = () => {
-    let stockQuantity = newProduct.current.productQuantities.find((quantity) => quantity.sizeID === selectedSizeID).quantity;
-    // console.log("check");
-    // console.log(stockQuantity);
-    if (stockQuantity < amount) {
-      setAmount(stockQuantity);
-      return true;
-      // console.log("cuu");
-    }
-  }
-  const makeOrder = () => {
-    const total = product.productPrice * amount;
-    const formData = new FormData();
-
-    formData.append('addressID', selectedAddress.addressID)
-    formData.append('totalAmount', total);
-    formData.append('productID', productID);
-    formData.append('sizeID', selectedSizeID);
-    formData.append('quantityPurchase', amount);
-
-    fetch(API.PUBLIC.ADD_ORDERS_BY_CHECKOUT_ENDPOINT, {
-      method: 'POST',
-      headers: {"Authorization": "Bearer " + accessToken},
-      body: formData,
-    })
-        .then((response) => {
-          if (response.ok) {
-            toast.success(MESSAGE.ORDER_PLACED_SUCCESS);
-            navigateOrdersWithUserID().then(r => {});
-            return response.json();
-          } else {
-            toast.warn(MESSAGE.PRODUCT_WAS_DELETED);
-            navigate('/');
-            throw new Error(ERROR.ORDER_PLACEMENT_ERROR);
-          }
-        })
-        .then((data) => {
-          // console.log(data);
-        })
-        .catch((error) => {
-          console.error('Lỗi:', error);
-        });
-  }
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch(apiProductDetailByID, {
-        method: 'GET',
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // console.log(data);
-        setProduct(data);
-        newProduct.current = data;
-        // console.log(newProduct.current);
-        // newProduct = data;
-        // console.log("fecth");
-        // console.log(product.productQuantities.find((quantity) => quantity.sizeID === selectedSizeID).quantity);
-      } else {
-        toast.warn(MESSAGE.PRODUCT_WAS_DELETED);
-        navigate('/');
-        const data = await response.json();
-        // toast.error(data.message);
-        console.log(data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    } finally {
-      // Bất kể thành công hay không, đặt trạng thái "loading" thành false để hiển thị component.
-      setLoading(false);
-    }
-  };
-
-  const navigateOrdersWithUserID = async () => {
-    try {
-      const response = await fetch(API.PUBLIC.GET_USER_ID_ENDPOINT, {
-        method: 'GET',
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        navigate(`/profile/orders?userID=${data}`)
-      }
-
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
 
   useEffect(() => {
-    fetchData().then(r => {});
+    const data = checkoutData;
+    setProduct(data);
+    newProduct.current = data;
   }, []);
 
   return (
@@ -241,7 +197,7 @@ const CheckoutPage = () => {
                           <Link to ={"/product?productID=" + product.productID}>
                             <h5 className="name">{product.productName}</h5>
                           </Link>
-                          <img src={closeButton} alt="icon close" onClick={handleCloseButton}/>
+                          <img src={closeButton} alt="icon close"/>
                         </div>
                         <div className="product__classify">
                           <div className="wrap-product-detail-properties d-flex ">
@@ -254,7 +210,6 @@ const CheckoutPage = () => {
                                       :
                                       <div key={index}
                                            className={`size-wrap size ${selectedSizeID === size.sizeID ? 'selected-size' : ''}`}
-                                           onClick={() => handleChooseSize(size.sizeID)}
                                       >{size.sizeName}</div>
                                   )
                                   : <></>
@@ -268,11 +223,11 @@ const CheckoutPage = () => {
                           </div>
                         </div>
                         <div className="product__quantity d-flex">
-                          <button type="button" className="btn btn-light product__quantity__icon d-flex align-items-center justify-content-center" onClick={handleDecreaseAmount}>
+                          <button type="button" className="btn btn-light product__quantity__icon d-flex align-items-center justify-content-center">
                             -
                           </button>
                           <div className="d-flex align-items-center justify-content-center quantity">{amount}</div>
-                          <button type="button" className="btn btn-light product__quantity__icon d-flex align-items-center justify-content-center" onClick={handleIncreaseAmount}>
+                          <button type="button" className="btn btn-light product__quantity__icon d-flex align-items-center justify-content-center">
                             +
                           </button>
                         </div>
@@ -332,11 +287,11 @@ const CheckoutPage = () => {
                             </div>
                           </div>
                         </div>
-                        <span onClick={handlePurchase}>
-                                            <button data-address="[]" id="btn-checkout" type="button" className="btn btn-danger cart__bill__total">
-                                                <span className="text-checkout">{CHECKOUT_PAGE.PAYMENT_TOTAL}  {formatter(product.productPrice * amount)} <span>{CHECKOUT_PAGE.COD}</span></span>
-                                            </button>
-                            </span>
+                        <span>
+                          <button data-address="[]" id="btn-checkout" type="button" className="btn btn-danger cart__bill__total">
+                              <span className="text-checkout">{CHECKOUT_PAGE.PAYMENT_TOTAL}  {formatter(product.productPrice * amount)} <span>{CHECKOUT_PAGE.COD}</span></span>
+                          </button>
+                          </span>
                       </div>
                     </div>
                   </div>

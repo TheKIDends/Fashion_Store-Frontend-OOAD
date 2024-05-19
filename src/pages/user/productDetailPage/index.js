@@ -4,105 +4,113 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import "./style.scss"
 import ProductDetailContent from "./ProductDetailContent/ProductDetailContent";
-import {toast} from "react-toastify";
-import queryString from "query-string";
-import {CartContext} from "@Theme/masterLayout";
+
 import {ScrollToTop} from '@Utils';
 import {API, BREADCRUMB, MESSAGE, PRODUCT_DETAIL_PAGE} from "@Const";
 import NotFoundPage from "../../error/notFoundPage";
 
+const productInfoData = {
+  "productID": 63,
+  "productName": "Áo Thun Dài Tay Nam, Mềm Mịn, Thoáng Khí",
+  "productPrice": 249000,
+  "productDescription": "ÁO THUN THIẾT KẾ CONFIDENCE \r\n\r\nÁo thun dài tay thiết kế in ép nhiệt bền bỉ, không rạn vỡ khi giặt ủi. Hình in mang phong cách trẻ trung, tạo điểm nhấn nổi bật.\r\n\r\nChất liệu chủ đạo từ Cotton mang lại cảm giác vải mềm mại, co giãn và đàn hồi tốt, cho bạn trải nghiệm thoải mái tối đa khi mặc.",
+  "productImages": [
+    {
+      "imageID": 293,
+      "productID": 63,
+      "imagePath": "https://iili.io/JR4LT5G.jpg"
+    },
+    {
+      "imageID": 294,
+      "productID": 63,
+      "imagePath": "https://iili.io/JR6F7h7.jpg"
+    },
+    {
+      "imageID": 295,
+      "productID": 63,
+      "imagePath": "https://iili.io/JR6FYQ9.jpg"
+    },
+    {
+      "imageID": 296,
+      "productID": 63,
+      "imagePath": "https://iili.io/JR6FcBe.jpg"
+    }
+  ],
+  "productSizes": [
+    {
+      "sizeID": 218,
+      "productID": 63,
+      "sizeName": "S"
+    },
+    {
+      "sizeID": 219,
+      "productID": 63,
+      "sizeName": "M"
+    },
+    {
+      "sizeID": 220,
+      "productID": 63,
+      "sizeName": "L"
+    },
+    {
+      "sizeID": 221,
+      "productID": 63,
+      "sizeName": "XL"
+    }
+  ],
+  "productQuantities": [
+    {
+      "quantityID": 218,
+      "productID": 63,
+      "sizeID": 218,
+      "quantity": 30
+    },
+    {
+      "quantityID": 219,
+      "productID": 63,
+      "sizeID": 219,
+      "quantity": 87
+    },
+    {
+      "quantityID": 220,
+      "productID": 63,
+      "sizeID": 220,
+      "quantity": 12
+    },
+    {
+      "quantityID": 221,
+      "productID": 63,
+      "sizeID": 221,
+      "quantity": 65
+    }
+  ],
+  "category": {
+    "categoryID": 2,
+    "categoryName": "Áo Thun",
+    "parentCategoryID": 1,
+    "imagePath": "https://iili.io/J5HXHIj.webp",
+    "products": null,
+    "subCategories": null
+  },
+  "parentCategory": {
+    "categoryID": 1,
+    "categoryName": "Áo Nam",
+    "parentCategoryID": null,
+    "imagePath": "https://iili.io/JR4gFGs.md.png",
+    "products": null,
+    "subCategories": null
+  },
+  "quantitySold": 1
+};
+
 const ProductDetailPage = () => {
-  const cartContext = useContext(CartContext);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = queryString.parse(location.search);
-
   const [informationProduct, setInformationProduct] = useState({});
-  const [cookies] = useCookies(['access_token']);
-  const accessToken = cookies.access_token;
-  const productID = queryParams.productID;
-
   const [isError, setIsError] = useState(null);
 
-  async function addToCart(orderDetails) {
-    const formData = new FormData();
-    // formData.append('accessToken', orderDetails.accessToken);
-    formData.append('productID', orderDetails.productID);
-    formData.append('sizeID', orderDetails.sizeID);
-    formData.append('quantityPurchase', orderDetails.quantityPurchase);
-
-    try {
-      const response = await fetch(API.PUBLIC.ADD_PRODUCT_TO_CART_ENDPOINT, {
-        method: 'POST',
-        headers: {"Authorization" : "Bearer " + orderDetails.accessToken},
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        cartContext.getAmountInCart();
-        toast.success(MESSAGE.ADDED_TO_CART_SUCCESS);
-      } else if (response.status === 401) {
-        const data = await response.json();
-        toast.warn(data.message);
-      } else {
-        toast.error(MESSAGE.GENERIC_ERROR);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.GENERIC_ERROR);
-      console.error('Error:', error);
-    }
-  }
-
-  const handleAddToCart = (newOrder) => {
-    const orderDetails = {
-      accessToken: accessToken,
-      productID: informationProduct.productID,
-      ...newOrder,
-    };
-    addToCart(orderDetails).then(r => {})
-  }
-
-  const handleBuyNow = (newOrder) => {
-    if (accessToken === undefined) {
-      toast.warn(MESSAGE.PLEASE_LOGIN);
-      return;
-    }
-    const orderDetails = {
-      accessToken: accessToken,
-      productID: informationProduct.productID,
-      ...newOrder,
-    };
-    navigate(`/checkout?productID=${orderDetails.productID}&sizeID=${orderDetails.sizeID}&quantity=${orderDetails.quantityPurchase}`);
-  }
-
   useEffect(() => {
-    const fetchData = async () => {
-      const apiProductDetailByID = API.PUBLIC.PRODUCT_ENDPOINT + productID;
-      try {
-        const response = await fetch(apiProductDetailByID, {
-          method: 'GET',
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          setInformationProduct(data);
-          setIsError(false);
-        } else {
-          const data = await response.json();
-          console.log(data.message);
-          setIsError(true);
-          // navigate(`/error`);
-        }
-      } catch (error) {
-        setIsError(true);
-        // toast.error(MESSAGE.DB_CONNECTION_ERROR);
-      }
-    }
-    fetchData().then(r => {});
-  }, [productID]);
+    setInformationProduct(productInfoData);
+    setIsError(false);
+  }, []);
 
   const BreadcrumbProduct = () => {
    return (
@@ -118,17 +126,13 @@ const ProductDetailPage = () => {
 
                 { informationProduct.parentCategory &&
                     <li className="link">
-                      <Link to={informationProduct.parentCategory.categoryID ? `/category?categoryID=${informationProduct.parentCategory.categoryID}` : ""}>
-                        <span>{(informationProduct.parentCategory.categoryName ? informationProduct.parentCategory.categoryName : PRODUCT_DETAIL_PAGE.CATEGORY_1)}</span>
-                      </Link>
+                      <span>{(informationProduct.parentCategory.categoryName ? informationProduct.parentCategory.categoryName : PRODUCT_DETAIL_PAGE.CATEGORY_1)}</span>
                       <span className="mr_lr">&nbsp;&gt;&nbsp;</span>
                     </li>
                 }
                 { informationProduct.category &&
                     <li className="link">
-                      <Link to={informationProduct.category.categoryID ? `/category?categoryID=${informationProduct.category.categoryID}` : ""}>
-                        <span>{(informationProduct.category.categoryName ? informationProduct.category.categoryName : PRODUCT_DETAIL_PAGE.CATEGORY_2)}</span>
-                      </Link>
+                      <span>{(informationProduct.category.categoryName ? informationProduct.category.categoryName : PRODUCT_DETAIL_PAGE.CATEGORY_2)}</span>
                       <span className="mr_lr">&nbsp;&gt;&nbsp;</span>
                     </li>
                 }
@@ -153,10 +157,7 @@ const ProductDetailPage = () => {
 
                   <section className="detail-product">
                     <div className="container pe-0 ps-0">
-                      <ProductDetailContent informationProduct={informationProduct}
-                                            handleAddToCart={handleAddToCart}
-                                            handleBuyNow={handleBuyNow}
-                      />
+                      <ProductDetailContent informationProduct={informationProduct} />
                     </div>
                   </section>
 

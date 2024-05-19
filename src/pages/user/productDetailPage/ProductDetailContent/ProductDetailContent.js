@@ -210,7 +210,7 @@ const ImagesProductSection = ({informationProduct}) => {
   );
 }
 
-const InformationBox = ({informationProduct, handleAddToCart, handleBuyNow}) => {
+const InformationBox = ({informationProduct}) => {
   const [selectedSizeID, setSelectedSizeID] = useState(null);
   const [quantityPurchase, setQuantityPurchase] = useState(1);
 
@@ -263,57 +263,6 @@ const InformationBox = ({informationProduct, handleAddToCart, handleBuyNow}) => 
 
     const quantity = (quantityPurchase ? quantityPurchase : 1);
     setQuantityPurchase(Math.min(Math.max(quantity, 1), productQuantities));
-  }
-
-  const [cookies] = useCookies(['access_token']);
-  const accessToken = cookies.access_token;
-  const handleClickAddToCart = () => {
-    if (selectedSizeID) {
-      const newOrderDetails = {
-        sizeID: selectedSizeID,
-        quantityPurchase: quantityPurchase,
-      };
-      handleAddToCart(newOrderDetails);
-      // Tạo một đối tượng chứa thông tin cho HTTP request
-      // const requestData = {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(newOrderDetails),
-      // };
-      // console.log(newOrderDetails.sizeID)
-      // // Gửi HTTP request để thêm sản phẩm vào giỏ hàng
-      // fetch(`/api/add-product-to-cart?accessToken=Bearer${" "+accessToken}&productID=${informationProduct.productID}&sizeID=${newOrderDetails.sizeID}&quantityPurchase=${newOrderDetails.quantityPurchase}`, requestData)
-      //     .then((response) => {
-      //       if (response.ok) {
-      //         // Xử lý khi request thành công, ví dụ: hiển thị thông báo thành công
-      //         toast.success("Sản phẩm đã được thêm vào giỏ hàng");
-      //       } else {
-      //         // Xử lý khi request không thành công, ví dụ: hiển thị thông báo lỗi
-      //         toast.error("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng");
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       // Xử lý lỗi kết nối hoặc lỗi khác
-      //       console.error("Lỗi khi thực hiện HTTP request:", error);
-      //     });
-    } else {
-      toast.warn(MESSAGE.PLEASE_SELECT_PRODUCT_SIZE);
-    }
-  };
-
-
-  const handleClickBuyNow = () => {
-    if (selectedSizeID) {
-      const newOrderDetails = {
-        sizeID: selectedSizeID,
-        quantityPurchase: quantityPurchase,
-      }
-      handleBuyNow(newOrderDetails);
-    } else {
-      toast.warn(MESSAGE.PLEASE_SELECT_PRODUCT_SIZE);
-    }
   }
 
   return (
@@ -410,7 +359,7 @@ const InformationBox = ({informationProduct, handleAddToCart, handleBuyNow}) => 
 
           <div style={{marginTop:"40px"}} className="wrap-product-detail btn-action d-flex">
             <div className="d-flex w-100">
-              <button id="add-cart" className="btn-add-to-cart" onClick={handleClickAddToCart}>
+              <button id="add-cart" className="btn-add-to-cart">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g>
                     <path
@@ -430,7 +379,7 @@ const InformationBox = ({informationProduct, handleAddToCart, handleBuyNow}) => 
                   <span> {PRODUCT_DETAIL_PAGE.ADD_TO_CART} </span>
                 </div>
               </button>
-              <button className="btn-buy-now " onClick={handleClickBuyNow}>
+              <button className="btn-buy-now ">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g>
                       <path
@@ -472,14 +421,11 @@ const InformationBox = ({informationProduct, handleAddToCart, handleBuyNow}) => 
   );
 }
 
-const ProductDetailContent = ({informationProduct, handleAddToCart, handleBuyNow}) => {
+const ProductDetailContent = ({informationProduct}) => {
   return (
       <div className="detail-product-content">
         <ImagesProductSection informationProduct={informationProduct}/>
-        <InformationBox informationProduct={informationProduct}
-                        handleAddToCart={handleAddToCart}
-                        handleBuyNow={handleBuyNow}
-        />
+        <InformationBox informationProduct={informationProduct}/>
       </div>
   );
 }

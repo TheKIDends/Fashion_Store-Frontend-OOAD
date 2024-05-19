@@ -11,7 +11,7 @@ function ProductItem({ product }) {
       <div className="product-item">
         <div className="product">
 
-          <Link to={"/product?productID=" + product.productID}>
+          <Link to={"/product?productID=63" + product.productID}>
             <div className="product-img">
               {
                 product.productImages.length > 0 ?

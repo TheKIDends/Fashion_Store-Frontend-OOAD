@@ -8,6 +8,18 @@ import {useLocation, useNavigate} from "react-router-dom";
 import queryString from "query-string";
 import {API, ERROR, MESSAGE, PROFILE_PAGE} from "@Const";
 
+const userInfoData = {
+  "userID": 4,
+  "fullName": "Nguyễn Văn Vinh",
+  "email": "khachhang@gmail.com",
+  "hashedPassword": null,
+  "phoneNumber": "09090909",
+  "gender": "Nam",
+  "dateBirthday": "1933-02-03",
+  "avatarPath": "https://iili.io/J5nNDS1.jpg",
+  "isAdmin": true
+};
+
 const ProfilePersonalInformationPage = () => {
   const [cookies] = useCookies(['access_token']);
   const accessToken = cookies.access_token;
@@ -25,102 +37,28 @@ const ProfilePersonalInformationPage = () => {
   const [gender, setGender] = useState("");
   const [dateBirthday, setDateBirthday] = useState({ day: '', month: '', year: '' });
 
-  const handleSaveInformation = async () => {
-    const formData = new FormData();
-    formData.append('userID', userID);
-    formData.append('fullName', name);
-    formData.append('email', email);
-    formData.append('phoneNumber', phoneNumber);
-    formData.append('gender', gender);
-    formData.append('dateBirthday', JSON.stringify(dateBirthday));
-
-    if (name === "" || email === "" || phoneNumber === "" || gender === "" || dateBirthday.day === ""
-        || dateBirthday.month === "" || dateBirthday.year === "") {
-      const errorText = document.querySelector(".error--message.error-save");
-      errorText.innerHTML = MESSAGE.MISSING_INFORMATION;
-      return;
-    }
-    const apiEditProfile = API.PUBLIC.EDIT_PROFILE_ENDPOINT;
-
-    try {
-      const response = await fetch(apiEditProfile, {
-        method: 'POST',
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.status === 404) {
-        toast.error(MESSAGE.DB_CONNECTION_ERROR);
-        return;
-      }
-
-      if (response.ok) {
-        const data = await response.json();
-        toast.success(data.message);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-
-      } else {
-        const data = await response.json();
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
-  const fetchUserData = async () => {
-    try {
-      if (!accessToken) {
-        throw new Error(ERROR.NO_TOKEN_ERROR);
-      }
-      const formData = new FormData();
-      formData.append('userID', userID);
-
-      const response = await fetch(API.PUBLIC.GET_USER_DATA_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        toast.error(MESSAGE.DB_CONNECTION_ERROR);
-        throw new Error(ERROR.SENDING_TOKEN_ERROR);
-      }
-
-      const data = await response.json();
-      let dateParts = [];
-      let year = "";
-      let month = "";
-      let day = "";
-      try {
-        dateParts = data.dateBirthday.split("-");
-        year = dateParts[0].toString();
-        month = dateParts[1].toString();
-        day = dateParts[2].toString();
-        if (day[0] === "0") day = day[1];
-        if (month[0] === "0") month = month[1];
-      } catch (error) {}
-
-      setUserData(data);
-      setName(data.fullName);
-      setEmail(data.email);
-      setPhoneNumber(data.phoneNumber);
-      setGender(data.gender);
-      setDateBirthday({ day, month, year });
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
   useEffect(() => {
-    fetchUserData().then(r => {});
+    const data = userInfoData;
+    let dateParts = [];
+    let year = "";
+    let month = "";
+    let day = "";
+    try {
+      dateParts = data.dateBirthday.split("-");
+      year = dateParts[0].toString();
+      month = dateParts[1].toString();
+      day = dateParts[2].toString();
+      if (day[0] === "0") day = day[1];
+      if (month[0] === "0") month = month[1];
+    } catch (error) {}
+
+    console.log(data);
+    setUserData(data);
+    setName(data.fullName);
+    setEmail(data.email);
+    setPhoneNumber(data.phoneNumber);
+    setGender(data.gender);
+    setDateBirthday({ day, month, year });
   }, []);
 
   return (
@@ -266,7 +204,7 @@ const ProfilePersonalInformationPage = () => {
             </form>
           </div>
           <div className="btn-wrap">
-            <button type="button" className="btn btn-primary btn-save-information" onClick={handleSaveInformation}>
+            <button type="button" className="btn btn-primary btn-save-information">
               {PROFILE_PAGE.PROFILE_PERSONAL_INFORMATION_PAGE.SAVE_INFORMATION}
             </button>
           </div>

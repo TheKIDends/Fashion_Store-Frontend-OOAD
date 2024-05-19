@@ -3,33 +3,22 @@ import { Link } from "react-router-dom";
 import closeButton from "../images/close.svg";
 import {formatter} from "@Utils/formatter.js"
 
-function CartProduct({ product, handleDecreaseAmount, handleIncreaseAmount, handleChooseSize, handleCloseButton }) {
+function CartProduct({ product }) {
 
     const checkQuantity = () => {
         let stockQuantity = product.informationProduct.productQuantities.find((quantity) => quantity.sizeID === product.sizeID).quantity;
-        // if (stockQuantity < product.quantityPurchase) {
-        //     // handleDecreaseAmount(product.quantityPurchase - stockQuantity);
-        //     // setReview(true);
-        //     // console.log("cuu");
-        // }
-
         return  Math.min(product.quantityPurchase, stockQuantity)
     }
-
 
     return (
         <div className="card-product d-flex">
             <div className="image-product">
-                <Link to={"/product?productID=" + product.productID}>
-                    <img src={product.informationProduct.productImages[0].imagePath} alt={""} />
-                </Link>
+                <img src={product.informationProduct.productImages[0].imagePath} alt={""} />
             </div>
             <div className="product__info">
                 <div className="product__name d-flex align-items-start justify-content-between">
-                    <Link to={"/product?productID=" + product.productID}>
-                        <h5 className="name">{product.informationProduct.productName}</h5>
-                    </Link>
-                    <img src={closeButton} alt="icon close" onClick={handleCloseButton} />
+                    <h5 className="name">{product.informationProduct.productName}</h5>
+                    <img src={closeButton} alt="icon close" />
                 </div>
                 <div className="product__classify">
                     <div className="wrap-product-detail-properties d-flex ">
@@ -44,7 +33,6 @@ function CartProduct({ product, handleDecreaseAmount, handleIncreaseAmount, hand
                                         <div
                                             key={index}
                                             className={`size-wrap size ${product.sizeID === size.sizeID ? "selected-size" : ""}`}
-                                            onClick={() => handleChooseSize(size.sizeID)}
                                         >
                                             {size.sizeName}
                                         </div>
@@ -62,13 +50,13 @@ function CartProduct({ product, handleDecreaseAmount, handleIncreaseAmount, hand
                     <div className="product__price__sale">{formatter(product.informationProduct.productPrice * product.quantityPurchase)}</div>
                 </div>
                 <div className="product__quantity d-flex">
-                    <button type="button" className="btn btn-light product__quantity__icon d-flex align-items-center justify-content-center" onClick={() => handleDecreaseAmount(1)}>
+                    <button type="button" className="btn btn-light product__quantity__icon d-flex align-items-center justify-content-center">
                         -
                     </button>
                     <div className="d-flex align-items-center justify-content-center quantity">
                         {checkQuantity()}
                     </div>
-                    <button type="button" className="btn btn-light product__quantity__icon d-flex align-items-center justify-content-center" onClick={handleIncreaseAmount}>
+                    <button type="button" className="btn btn-light product__quantity__icon d-flex align-items-center justify-content-center">
                         +
                     </button>
                 </div>

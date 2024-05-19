@@ -14,15 +14,11 @@ const ProfileChangePassword = () => {
   const [cookies] = useCookies(['access_token']);
   const accessToken = cookies.access_token;
 
-  const location = useLocation();
-  const queryParams = queryString.parse(location.search);
-  const [userID, setUserID] = useState(queryParams.userID);
-
   const [isShowOldPassword, setIsShowOldPassword] = useState(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
-  const [isOwner, setIsOwner] = useState(null);
+  const [isOwner, setIsOwner] = useState(true);
   const [isShowConfirmDialog, setIsShowConfirmDialog] = useState(false);
 
   const [oldPassword, setOldPassword] = useState("");
@@ -31,67 +27,7 @@ const ProfileChangePassword = () => {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-
-    if (newPassword !== confirmNewPassword) {
-      toast.warn(MESSAGE.CONFIRMATION_PASSWORD_MISMATCH);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('userID', userID);
-    formData.append('newPassword', newPassword);
-    formData.append('oldPassword', oldPassword);
-
-    try {
-      const response = await fetch(API.PUBLIC.CHANGE_PASSWORD_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        response.text().then(data => {
-          toast.error(data);
-        });
-      }
-      else {
-        response.text().then(data => {
-          toast.success(data);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        });
-      }
-    } catch (error) {
-      toast.error(error);
-      console.log(error);
-    }
   }
-
-  const fetchUserID = async () => {
-    try {
-      const response = await fetch(API.PUBLIC.GET_USER_ID_ENDPOINT, {
-        method: 'GET',
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setIsOwner(userID == data);
-      }
-
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
-  useEffect(() => {
-    fetchUserID().then(r => {});
-  }, []);
 
   return (
       <div className="col-8 content-children item-row">

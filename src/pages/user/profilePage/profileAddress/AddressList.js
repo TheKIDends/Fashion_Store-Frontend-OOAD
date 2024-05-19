@@ -6,94 +6,36 @@ import queryString from "query-string";
 import {ConfigProvider, Popconfirm} from "antd";
 import {API, MESSAGE, POPCONFIRM, PROFILE_PAGE} from "@Const";
 
-function AddressList() {
-  const [cookies] = useCookies(['access_token']);
+const addressData = [
+  {
+    "addressID": 5,
+    "usersID": 4,
+    "recipientName": "Nguyễn Văn Vinh",
+    "recipientPhone": "090909090",
+    "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
+    "isDefault": true
+  },
+  {
+    "addressID": 6,
+    "usersID": 4,
+    "recipientName": "Nguyễn Châu Khanh",
+    "recipientPhone": "0999999999",
+    "addressDetails": "Hà Nội",
+    "isDefault": false
+  }
+];
 
+function AddressList() {
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
   const [userID, setUserID] = useState(queryParams.userID);
-  const accessToken = cookies.access_token;
   const [addresses, setAddresses] = useState([]);
 
-  const fetchData = async () => {
-    const formData = new FormData();
-    formData.append('userID', userID);
-
-    try {
-      const response = await fetch(API.PUBLIC.GET_ALL_ADDRESSES_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const sortedAddresses = data.sort((a, b) => (b.isDefault || 0) - (a.isDefault || 0));
-        setAddresses(sortedAddresses);
-
-      } else {
-        const data = await response.json();
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
   useEffect(() => {
-    fetchData().then(r => {});
+    const data = addressData;
+    const sortedAddresses = data.sort((a, b) => (b.isDefault || 0) - (a.isDefault || 0));
+    setAddresses(sortedAddresses);
   }, []);
-
-  const handleSetDefault = async (id) => {
-    try {
-      const formData = new FormData()
-      formData.append("addressID", addresses[id].addressID)
-      const response = await fetch(API.PUBLIC.SET_DEFAULT_ADDRESS_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        fetchData().then(r => {});
-      } else {
-        console.error("Error:", response);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const formData = new FormData()
-      formData.append("addressID", addresses[id].addressID)
-
-      const response = await fetch(API.PUBLIC.DELETE_ADDRESS_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        fetchData().then(r => {
-          toast.success(MESSAGE.ADDRESS_DELETION_SUCCESS);
-        });
-      } else {
-        toast.error(MESSAGE.GENERIC_ERROR);
-        console.error("Error:", response);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.GENERIC_ERROR);
-      console.error("Error:", error);
-    }
-  }
 
   return (
       <div>
@@ -109,7 +51,6 @@ function AddressList() {
                     :
                     <button className="btn-set-default pointer"
                             data-address-id="652c63418a828b4b6e095526"
-                            onClick={() => handleSetDefault(index)}
                     >
                       <span className="set-default">
                         {PROFILE_PAGE.PROFILE_ADDRESS.SET_DEFAULT}
@@ -149,7 +90,6 @@ function AddressList() {
                               title={<div>{POPCONFIRM.CONFIRM_DELETE_ADDRESS}</div>}
                               okText={<div>{POPCONFIRM.DELETE}</div>}
                               cancelText={<div>{POPCONFIRM.CANCEL}</div>}
-                              onConfirm={() => handleDelete(index)}
                           >
                             <span className="delete delete-address"> {PROFILE_PAGE.PROFILE_ADDRESS.DELETE} </span>
                           </Popconfirm>

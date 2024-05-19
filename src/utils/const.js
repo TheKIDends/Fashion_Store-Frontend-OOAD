@@ -422,7 +422,7 @@ export const FOOTER = {
   EMAIL_TXT: "Email:",
   HOTLINE_TXT: "Hotline:",
   DESCRIPTION_CONTENT: <>Chào mừng bạn đến với <span style={{color:'#bd0000', fontWeight:"600"}}>Fashion Store</span> - nơi thể hiện bản thân qua những bộ trang phục đẳng cấp và sáng tạo. Chúng tôi cam kết mang lại trải nghiệm mua sắm độc đáo, nơi bạn có thể tìm thấy những sản phẩm thời trang hàng đầu và uy tín. Đội ngũ chuyên nghiệp luôn sẵn sàng hỗ trợ bạn. Hãy đồng hành cùng chúng tôi để khám phá phong cách của riêng bạn!</>,
-  DEVELOPED_BY: "Developed by Group 14 - Web Application Development Course - INT3306 3",
+  DEVELOPED_BY: "Group 15 - Object Oriented Analysis And Design - INT3110 4",
 }
 
 export const SELECT = {

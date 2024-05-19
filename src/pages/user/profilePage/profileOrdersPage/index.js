@@ -10,6 +10,168 @@ import {convertDateTimeFormat} from '@Utils';
 import queryString from "query-string";
 import {ConfigProvider, Popconfirm} from "antd";
 import {API, IMAGE_URL, POPCONFIRM, PROFILE_PAGE, TAB_LIST_ITEMS, TAB_LIST_TEXT} from "@Const";
+import {isSubstringIgnoreCaseAndAccents} from "../../../../utils";
+
+const ordersData = [
+    {
+        "orderID": 19,
+        "orderDate": "2024-05-17T17:40:58.502+00:00",
+        "totalAmount": 249000,
+        "orderStatus": "Đã xác nhận",
+        "userID": 4,
+        "recipientName": "Nguyễn Văn Vinh",
+        "recipientPhone": "090909090",
+        "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
+        "orderDetails": [
+            {
+                "orderDetailID": 32,
+                "orderID": 19,
+                "productID": 63,
+                "productName": "Áo Thun Dài Tay Nam, Mềm Mịn, Thoáng Khí",
+                "imagePath": "https://iili.io/JR4LT5G.jpg",
+                "sizeName": "M",
+                "productPrice": 249000,
+                "quantity": 1,
+                "totalPrice": 249000
+            }
+        ],
+        "fullName": "Nguyễn Văn Vinh",
+        "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    },
+    {
+        "orderID": 20,
+        "orderDate": "2024-05-17T17:47:22.367+00:00",
+        "totalAmount": 1187000,
+        "orderStatus": "Chờ xác nhận",
+        "userID": 4,
+        "recipientName": "Nguyễn Văn Vinh",
+        "recipientPhone": "090909090",
+        "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
+        "orderDetails": [
+            {
+                "orderDetailID": 33,
+                "orderID": 20,
+                "productID": 70,
+                "productName": "Áo Thun Dài Tay Nam, Mềm Mịn, Thoáng Khí",
+                "imagePath": "https://iili.io/JR4Dqps.jpg",
+                "sizeName": "M",
+                "productPrice": 249000,
+                "quantity": 1,
+                "totalPrice": 249000
+            },
+            {
+                "orderDetailID": 34,
+                "orderID": 20,
+                "productID": 91,
+                "productName": "Quần Short Thể Thao Nam, Cạp Cúc, In Sườn",
+                "imagePath": "https://iili.io/JRLZkCb.jpg",
+                "sizeName": "XL",
+                "productPrice": 469000,
+                "quantity": 2,
+                "totalPrice": 938000
+            }
+        ],
+        "fullName": "Nguyễn Văn Vinh",
+        "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    },
+    {
+        "orderID": 21,
+        "orderDate": "2024-05-17T17:48:20.760+00:00",
+        "totalAmount": 799000,
+        "orderStatus": "Hoàn thành",
+        "userID": 4,
+        "recipientName": "Nguyễn Văn Vinh",
+        "recipientPhone": "090909090",
+        "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
+        "orderDetails": [
+            {
+                "orderDetailID": 35,
+                "orderID": 21,
+                "productID": 46,
+                "productName": "Áo Khoác GIó Nam, Cản Gió, Trượt Nước",
+                "imagePath": "https://iili.io/JR4pqyF.jpg",
+                "sizeName": "L",
+                "productPrice": 799000,
+                "quantity": 1,
+                "totalPrice": 799000
+            }
+        ],
+        "fullName": "Nguyễn Văn Vinh",
+        "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    },
+    {
+        "orderID": 22,
+        "orderDate": "2024-05-17T17:48:49.382+00:00",
+        "totalAmount": 2596000,
+        "orderStatus": "Chờ xác nhận",
+        "userID": 4,
+        "recipientName": "Nguyễn Văn Vinh",
+        "recipientPhone": "090909090",
+        "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
+        "orderDetails": [
+            {
+                "orderDetailID": 36,
+                "orderID": 22,
+                "productID": 108,
+                "productName": "Quần Kaki Dài Nam, Đứng Phom, Tôn Dáng",
+                "imagePath": "https://iili.io/JRLylZ7.jpg",
+                "sizeName": "2XL",
+                "productPrice": 649000,
+                "quantity": 4,
+                "totalPrice": 2596000
+            }
+        ],
+        "fullName": "Nguyễn Văn Vinh",
+        "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    },
+    {
+        "orderID": 23,
+        "orderDate": "2024-05-17T17:57:34.241+00:00",
+        "totalAmount": 3386000,
+        "orderStatus": "Đang giao hàng",
+        "userID": 4,
+        "recipientName": "Nguyễn Văn Vinh",
+        "recipientPhone": "090909090",
+        "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
+        "orderDetails": [
+            {
+                "orderDetailID": 37,
+                "orderID": 23,
+                "productID": 108,
+                "productName": "Quần Kaki Dài Nam, Đứng Phom, Tôn Dáng",
+                "imagePath": "https://iili.io/JRLylZ7.jpg",
+                "sizeName": "S",
+                "productPrice": 649000,
+                "quantity": 1,
+                "totalPrice": 649000
+            },
+            {
+                "orderDetailID": 38,
+                "orderID": 23,
+                "productID": 49,
+                "productName": "Áo Khoác Bomber Nam, Cản Gió, Thiết Kế Trẻ Trung",
+                "imagePath": "https://iili.io/JR4yBl2.jpg",
+                "sizeName": "M",
+                "productPrice": 939000,
+                "quantity": 1,
+                "totalPrice": 939000
+            },
+            {
+                "orderDetailID": 39,
+                "orderID": 23,
+                "productID": 50,
+                "productName": " Áo Khoác Bomber Nam, Lót Lông, Thiết Kế Trẻ Trung",
+                "imagePath": "https://iili.io/JR4yMxa.jpg",
+                "sizeName": "XL",
+                "productPrice": 899000,
+                "quantity": 2,
+                "totalPrice": 1798000
+            }
+        ],
+        "fullName": "Nguyễn Văn Vinh",
+        "avatarPath": "https://iili.io/J5nNDS1.jpg"
+    }
+];
 
 const TabList = ({openTab, setOpenTab}) => {
   return (
@@ -43,56 +205,16 @@ const TabContent = ({openTab, setOpenTab}) => {
   const [orderList, setOrderList] = useState([])
   const [loading, setLoading] = useState(true);
 
-  const getData = () => {
-    const formData = new FormData();
-    formData.append('userID', userID);
-    formData.append('orderStatus', openTab);
-
-    fetch(API.PUBLIC.GET_ALL_ORDERS_BY_ORDER_STATUS_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-      },
-      body: formData
-    })
-        .then((response) => response.json())
-        .then((data) => {
-          setOrderList(data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-  }
-
   useEffect(() => {
-    getData();
+      setOrderList(ordersData);
+      if (openTab !==  TAB_LIST_TEXT.ALL) {
+          setOrderList(
+              ordersData.filter((order) =>
+                  isSubstringIgnoreCaseAndAccents(openTab, order.orderStatus)
+              )
+          );
+      }
   }, [openTab]);
-
-  function handleCancelOrder(orderID) {
-    const formData = new FormData();
-    formData.append('orderID', orderID);
-
-    fetch(API.PUBLIC.CANCEL_ORDER_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-      },
-      body: formData
-    })
-        .then((response) => response.json())
-        .then((data) => {
-          getData();
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-  }
 
   return (
       <div>
@@ -186,7 +308,6 @@ const TabContent = ({openTab, setOpenTab}) => {
                                 title={POPCONFIRM.CONFIRM_CANCEL_ORDER}
                                 okText={<div>{POPCONFIRM.YES}</div>}
                                 cancelText={<div>{POPCONFIRM.NO}</div>}
-                                onConfirm={() => handleCancelOrder(order.orderID)}
                             >
                               <button className="cancel-order">{PROFILE_PAGE.PROFILE_ORDERS_PAGE.CANCEL_ORDER}</button>
                             </Popconfirm>

@@ -22,71 +22,8 @@ const ProfileNewAddress = () => {
   const [addressDetails, setAddressDetails] = useState("");
   const [isDefault, setIsDefault] = useState(false);
 
-  const [cookies] = useCookies(['access_token']);
-  const accessToken = cookies.access_token;
-
-  const getAddresses = () => {
-    try {
-      const formData = new FormData();
-      formData.append('userID', userID);
-
-      fetch(API.PUBLIC.GET_ALL_ADDRESSES_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      })
-          .then((response) => response.json())
-          .then((data) => {
-            setIsDefault(data.length == 0);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          })
-    }
-    finally {
-      // setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    if (userID) getAddresses();
-  }, []);
-
-  const handleSave = async () => {
-    const formData = new FormData();
-    formData.append('userID', userID);
-    formData.append('recipientName', recipientName);
-    formData.append('recipientPhone', recipientPhone);
-    formData.append('addressDetails', addressDetails);
-    formData.append('isDefault', isDefault);
-
-    try {
-      const response = await fetch(API.PUBLIC.NEW_ADDRESS_ENDPOINT, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: formData,
-      })
-
-      if (response.status === 200) {
-        let jsonResponse = await response.json();
-        toast.success(jsonResponse.message);
-        navigate(`/profile/address?userID=${userID}`);
-      }
-      else {
-        let jsonResponse = await response.json();
-        toast.error(jsonResponse.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
   const handleCancel = () => {
-    navigate(`/profile/address?userID=${userID}`);
+    navigate(`/profile/address?userID=4`);
   }
 
   return (
@@ -94,7 +31,7 @@ const ProfileNewAddress = () => {
         <section className="new__address__wrap" style={{ minHeight: "438px" }}>
           <section className="header__wrap">
             <button className="btn__back">
-              <Link to={`/profile/address?userID=${userID}`}>
+              <Link to={`/profile/address?userID=4`}>
                 <img src={arrowLeft1} alt="icon arrow left" />
               </Link>
             </button>
@@ -145,7 +82,7 @@ const ProfileNewAddress = () => {
             </section>
 
             <section className="footer__wrap" style={{ marginLeft: "30px" }}>
-              <button type="button" className="btn btn-danger" id="save" onClick={handleSave}>
+              <button type="button" className="btn btn-danger" id="save">
                 {PROFILE_PAGE.PROFILE_NEW_ADDRESS.SAVE_CHANGES}
               </button>
               <button type="button" className="btn btn-outline-danger" id="cancel" onClick={handleCancel}>

@@ -25,72 +25,39 @@ const ProfileEditAddress = () => {
   const [isDefault, setIsDefault] = useState(false);
   const accessToken = cookies.access_token;
 
+  const addressData = [
+    {
+      "addressID": 5,
+      "usersID": 4,
+      "recipientName": "Nguyễn Văn Vinh",
+      "recipientPhone": "090909090",
+      "addressDetails": "144 Xuân Thuỷ, Cầu Giấy, Hà Nội",
+      "isDefault": true
+    },
+    {
+      "addressID": 6,
+      "usersID": 4,
+      "recipientName": "Nguyễn Châu Khanh",
+      "recipientPhone": "0999999999",
+      "addressDetails": "Hà Nội",
+      "isDefault": false
+    }
+  ];
+
   const getData = () => {
-    const formData = new FormData();
-    formData.append('addressID', addressID);
-    try {
-      fetch(API.PUBLIC.GET_ADDRESS_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      })
-          .then((response) => response.json())
-          .then((data) => {
-            // console.log(data);
-            setAddress(data);
-            setRecipientName(data.recipientName);
-            setRecipientPhone(data.recipientPhone);
-            setAddressDetails(data.addressDetails);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          })
-    }
-    finally {
-      // setLoading(false);
-    }
+    const data  = (addressID == 5 ? addressData[0] : addressData[1]);
+    setAddress(data);
+    setRecipientName(data.recipientName);
+    setRecipientPhone(data.recipientPhone);
+    setAddressDetails(data.addressDetails);
   }
 
   useEffect(() => {
     getData();
   }, []);
 
-  const handleSave = async () => {
-    const formData = new FormData();
-
-    formData.append('addressID', addressID);
-    formData.append('recipientName', recipientName);
-    formData.append('recipientPhone', recipientPhone);
-    formData.append('addressDetails', addressDetails);
-    formData.append('isDefault', address.isDefault);
-
-    try {
-      const response = await fetch(API.PUBLIC.EDIT_ADDRESS_ENDPOINT, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: formData,
-      })
-
-      if (response.status === 200) {
-        let jsonResponse = await response.json();
-        toast.success(jsonResponse.message)
-        navigate(`/profile/address?userID=${userID}`);
-      }
-      else {
-        let jsonResponse = await response.json();
-        toast.error(jsonResponse.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
   const handleCancel = () => {
-    navigate(`/profile/address?userID=${userID}`);
+    navigate(`/profile/address?userID=4`);
   }
 
   return (
@@ -98,7 +65,7 @@ const ProfileEditAddress = () => {
         <section className="new__address__wrap" style={{minHeight: "438px"}}>
           <section className="header__wrap">
             <button className="btn__back">
-              <Link to={`/profile/address?userID=${userID}`}>
+              <Link to={`/profile/address?userID=4`}>
                 <img src={arrowLeft1} alt="icon arrow left" />
               </Link>
             </button>
@@ -141,7 +108,7 @@ const ProfileEditAddress = () => {
             </section>
 
             <section className="footer__wrap" style={{marginLeft: "30px"}}>
-              <button type="button" className="btn btn-danger" id="save" onClick={handleSave}>
+              <button type="button" className="btn btn-danger" id="save">
                 {PROFILE_PAGE.PROFILE_EDIT_ADDRESS.SAVE_CHANGES}
               </button>
               <button type="button" className="btn btn-outline-danger" id="cancel" onClick={handleCancel}>
