@@ -27,175 +27,10 @@ function AddressModal({ userID, selectedAddress, closeModalListAddress, confirmA
     setAddressDetails("");
   }
 
-  const updateData = () => {
-    const formData = new FormData();
-    formData.append('userID', userID);
-
-    fetch(API.PUBLIC.GET_ALL_ADDRESSES_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-      },
-      body: formData,
-    })
-        .then((response) => response.json())
-        .then((data) => {
-          // console.log(data);
-          const sortedAddresses = data.sort((a, b) => (b.isDefault || 0) - (a.isDefault || 0));
-          setAddressList(sortedAddresses);
-          setIsDefault(data.length === 0);
-          if (data.length === 1) setIdSelected(data[0].addressID);
-
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-  }
-
-  useEffect(() => {
-    updateData();
-  }, [openModal]);
-
-  const handleSetAddressDefault = async (id) => {
-    try {
-      const formData = new FormData()
-      formData.append("addressID", addressList[id].addressID)
-      const response = await fetch(API.PUBLIC.SET_DEFAULT_ADDRESS_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        updateData();
-      } else {
-        console.error("Error:", response);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const handleConfirmCreateAddress = async () => {
-    if (!recipientName) {
-      toast.warn(MESSAGE.ENTER_FULL_NAME);
-      return;
-    }
-    if (!recipientPhone) {
-      toast.warn(MESSAGE.MISSING_PHONE_NUMBER);
-      return;
-    }
-    if (!addressDetails) {
-      toast.warn(MESSAGE.ENTER_DELIVERY_ADDRESS);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('userID', userID);
-    formData.append('recipientName', recipientName);
-    formData.append('recipientPhone', recipientPhone);
-    formData.append('addressDetails', addressDetails);
-    formData.append('isDefault', isDefault);
-
-    try {
-      const response = await fetch(API.PUBLIC.NEW_ADDRESS_ENDPOINT, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: formData,
-      })
-      if (response.status === 200) {
-        let jsonResponse = await response.json();
-        toast.success(jsonResponse.message);
-        switchModal(ADDRESS_MODAL.LIST_ADDRESS)
-      }
-      else {
-        let jsonResponse = await response.json();
-        toast.error(jsonResponse.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
-  const handleConfirmUpdateAddress = async (addressID) => {
-    if (!recipientName) {
-      toast.warn(MESSAGE.ENTER_FULL_NAME);
-      return;
-    }
-    if (!recipientPhone) {
-      toast.warn(MESSAGE.MISSING_PHONE_NUMBER);
-      return;
-    }
-    if (!addressDetails) {
-      toast.warn(MESSAGE.ENTER_DELIVERY_ADDRESS);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('addressID', addressID);
-    formData.append('recipientName', recipientName);
-    formData.append('recipientPhone', recipientPhone);
-    formData.append('addressDetails', addressDetails);
-    formData.append('isDefault', addressList.find((address) => address.addressID === addressID).isDefault);
-
-    try {
-      const response = await fetch(API.PUBLIC.EDIT_ADDRESS_ENDPOINT, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: formData,
-      })
-
-      if (response.status === 200) {
-        let jsonResponse = await response.json();
-        toast.success(jsonResponse.message);
-        switchModal(ADDRESS_MODAL.LIST_ADDRESS)
-      }
-      else {
-        let jsonResponse = await response.json();
-        toast.error(jsonResponse.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
   const switchModal = (modal, updateID) => {
     setOpenModal(modal);
     updateAddressID.current = updateID;
     resetInputModal();
-
-    if (updateID !== undefined) {
-      const formData = new FormData();
-      formData.append('addressID', updateID);
-      try {
-        fetch(API.PUBLIC.GET_ADDRESS_ENDPOINT, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${accessToken}`,
-          },
-          body: formData,
-        })
-            .then((response) => response.json())
-            .then((data) => {
-              // console.log(data);
-              setRecipientName(data.recipientName);
-              setRecipientPhone(data.recipientPhone);
-              setAddressDetails(data.addressDetails);
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            })
-      }
-      finally {
-        // setLoading(false);
-      }
-    }
   }
 
   return (
@@ -243,7 +78,7 @@ function AddressModal({ userID, selectedAddress, closeModalListAddress, confirmA
                                   {address.isDefault ?
                                       <div className="text_default active">{ADDRESS_SECTION.DEFAULT}</div>
                                       :
-                                      <div className="text_default" onClick={() => handleSetAddressDefault(index)}>
+                                      <div className="text_default">
                                         {ADDRESS_SECTION.SET_DEFAULT}
                                       </div>
                                   }
@@ -338,7 +173,7 @@ function AddressModal({ userID, selectedAddress, closeModalListAddress, confirmA
                   <div className="modal-create-address-footer ">
                     {/*<div onClick={updateAddress} className="btn-submit">Cập nhật</div>*/}
                     <div className="btn-cancel" onClick={() => switchModal(ADDRESS_MODAL.LIST_ADDRESS)}>{ADDRESS_SECTION.CANCEL}</div>
-                    <div className="btn-submit" onClick={handleConfirmCreateAddress}>{ADDRESS_SECTION.CONFIRM}</div>
+                    <div className="btn-submit" >{ADDRESS_SECTION.CONFIRM}</div>
                   </div>
                 </>
             }
@@ -401,7 +236,7 @@ function AddressModal({ userID, selectedAddress, closeModalListAddress, confirmA
                   </div>
                   <div className="modal-create-address-footer ">
                     <div className="btn-cancel" onClick={() => switchModal(ADDRESS_MODAL.LIST_ADDRESS)}>{ADDRESS_SECTION.CANCEL}</div>
-                    <div className="btn-submit" onClick={() => handleConfirmUpdateAddress(updateAddressID.current)}>{ADDRESS_SECTION.UPDATE}</div>
+                    <div className="btn-submit">{ADDRESS_SECTION.UPDATE}</div>
                   </div>
                 </>
             }

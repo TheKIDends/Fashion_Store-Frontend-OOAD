@@ -12,37 +12,6 @@ const SearchDialog = ({keyword}) => {
   const [isDialogVisible, setIsDialogVisible] = useState(true);
   const hasResults = filteredSearchItem.length > 0;
 
-  const fetchData = async () => {
-    const formData = new FormData();
-    formData.append('productName', keyword);
-
-    const apiProductBySearch = API.PUBLIC.SEARCH_ENDPOINT;
-    try {
-      const response = await fetch(apiProductBySearch, {
-        method: "POST",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSearchItem(data.slice(0, 5));
-      } else {
-        const data = await response.json();
-        console.log(data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  }
-
-  useEffect(() => {
-    fetchData().then(r => {});
-  }, [keyword]);
-
   return (
       hasResults && (<div
           className="result-box position-absolute"

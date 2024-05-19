@@ -10,6 +10,133 @@ import {ConfigProvider, Popconfirm} from "antd";
 import {isStartWithLetter} from '@Utils';
 import {API, CATEGORY, CATEGORY_DIALOG, MESSAGE, POPCONFIRM} from "@Const";
 
+const categoriesData = [
+  {
+    "categoryID": 1,
+    "categoryName": "Áo Nam",
+    "parentCategoryID": null,
+    "imagePath": "https://iili.io/JR4gFGs.md.png",
+    "products": null,
+    "subCategories": [
+      {
+        "categoryID": 2,
+        "categoryName": "Áo Thun",
+        "parentCategoryID": 1,
+        "imagePath": "https://iili.io/J5HXHIj.webp",
+        "products": null,
+        "subCategories": null
+      },
+      {
+        "categoryID": 3,
+        "categoryName": "Áo Khoác",
+        "parentCategoryID": 1,
+        "imagePath": "https://iili.io/J5HXFEB.webp",
+        "products": null,
+        "subCategories": null
+      },
+      {
+        "categoryID": 4,
+        "categoryName": "Áo Polo",
+        "parentCategoryID": 1,
+        "imagePath": "https://iili.io/J5HXq21.webp",
+        "products": null,
+        "subCategories": null
+      },
+      {
+        "categoryID": 8,
+        "categoryName": "Áo Sơ Mi",
+        "parentCategoryID": 1,
+        "imagePath": "https://iili.io/J5HXCkg.webp",
+        "products": null,
+        "subCategories": null
+      }
+    ]
+  },
+  {
+    "categoryID": 5,
+    "categoryName": "Quần Nam",
+    "parentCategoryID": null,
+    "imagePath": "https://iili.io/JR4gFGs.md.png",
+    "products": null,
+    "subCategories": [
+      {
+        "categoryID": 7,
+        "categoryName": "Quần Short Thể Thao",
+        "parentCategoryID": 5,
+        "imagePath": "https://iili.io/J5HXUGV.webp",
+        "products": null,
+        "subCategories": null
+      },
+      {
+        "categoryID": 9,
+        "categoryName": "Quần Dài Kaki",
+        "parentCategoryID": 5,
+        "imagePath": "https://iili.io/J5HXNyu.webp",
+        "products": null,
+        "subCategories": null
+      },
+      {
+        "categoryID": 10,
+        "categoryName": "Quần Short Kaki",
+        "parentCategoryID": 5,
+        "imagePath": "https://iili.io/J5HXUGV.webp",
+        "products": null,
+        "subCategories": null
+      },
+      {
+        "categoryID": 11,
+        "categoryName": "Quần Short Tây",
+        "parentCategoryID": 5,
+        "imagePath": "https://iili.io/J5HXLua.webp",
+        "products": null,
+        "subCategories": null
+      }
+    ]
+  },
+  {
+    "categoryID": 12,
+    "categoryName": "Quần Lót",
+    "parentCategoryID": null,
+    "imagePath": "https://iili.io/JR4gFGs.md.png",
+    "products": null,
+    "subCategories": [
+      {
+        "categoryID": 13,
+        "categoryName": "Quần Lót Boxer",
+        "parentCategoryID": 12,
+        "imagePath": "https://iili.io/J5HjR5X.webp",
+        "products": null,
+        "subCategories": null
+      },
+      {
+        "categoryID": 14,
+        "categoryName": "Quần Lót Brief",
+        "parentCategoryID": 12,
+        "imagePath": "https://iili.io/J5HjR5X.webp",
+        "products": null,
+        "subCategories": null
+      }
+    ]
+  },
+  {
+    "categoryID": 15,
+    "categoryName": "Phụ Kiện",
+    "parentCategoryID": null,
+    "imagePath": "https://iili.io/JR4gFGs.md.png",
+    "products": null,
+    "subCategories": [
+      {
+        "categoryID": 16,
+        "categoryName": "Tất Nam",
+        "parentCategoryID": 15,
+        "imagePath": "https://iili.io/J5HwxTu.jpg",
+        "products": null,
+        "subCategories": null
+      }
+    ]
+  }
+];
+
 const CategoryDialog = ({ onClose, onConfirm }) => {
   const [cookies] = useCookies(['access_token']);
   const accessToken = cookies.access_token;
@@ -36,29 +163,12 @@ const CategoryDialog = ({ onClose, onConfirm }) => {
     onConfirm(selectedCategory, selectedParentCategory);
   };
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(API.PUBLIC.GET_ALL_CATEGORIES_ENDPOINT, {
-        method: 'GET',
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // console.log("apiGetCategory");
-        // console.log(data);
-
-        setCategories(data);
-      } else {
-        const data = await response.json();
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
+  const initData = async () => {
+    setCategories(categoriesData);
   }
 
   useEffect(() => {
-    fetchData().then(r => {});
+    initData().then(r => {});
   }, []);
 
   useEffect(() => {
@@ -130,194 +240,6 @@ const CategoryDialog = ({ onClose, onConfirm }) => {
     setIsAddingSubCategory(true);
   };
 
-  const handleSaveCategory = async () => {
-    if (inputValue === "") {
-      toast.warn(MESSAGE.MISSING_CATEGORY_NAME);
-      return;
-    }
-    if (!isStartWithLetter(inputValue)) {
-      toast.warn(MESSAGE.CATEGORY_NAME_INVALID);
-      return;
-    }
-
-    let parentCategoryID = 0;
-    const formData = new FormData();
-    formData.append('categoryName', inputValue);
-    formData.append('parentCategoryID', parentCategoryID);
-
-    try {
-      const response = await fetch(API.ADMIN.ADD_CATEGORY_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        toast.success(data.message);
-
-        // if (inputValue !== "") {
-        //   setCategories([...categories, { id: 0, name: inputValue }]);
-        // }
-
-        setInputValue("");
-        setIsAddingCategory(false);
-        fetchData().then(r => {});
-      } else {
-        const data = await response.json();
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  };
-
-  const handleSaveSubCategory = async () => {
-    if (inputValue === "") {
-      toast.warn(MESSAGE.MISSING_CATEGORY_NAME);
-      return;
-    }
-    if (!isStartWithLetter(inputValue)) {
-      toast.warn(MESSAGE.CATEGORY_NAME_INVALID);
-      return;
-    }
-
-    let parentCategoryID = selectedParentCategory.categoryID;
-    let categoryName = inputValue;
-
-    const formData = new FormData();
-    formData.append('parentCategoryID', parentCategoryID);
-    formData.append('categoryName', categoryName);
-
-    try {
-      const response = await fetch(API.ADMIN.ADD_CATEGORY_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        toast.success(data.message);
-
-        // if (inputValue !== "") {
-        //   setCategories([...categories, { id: 0, name: inputValue }]);
-        // }
-
-        handleCancelSubCategoryClick();
-        fetchData().then(r => {});
-      } else {
-        const data = await response.json();
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-    }
-  };
-
-  const handleSaveCategoryClick = () => {
-    handleSaveCategory().then(r => {});
-  };
-
-  const handleSaveSubCategoryClick = () => {
-    handleSaveSubCategory().then(r => {});
-  };
-
-  const deleteCategory = async (categoryID, type) => {
-    const formData = new FormData();
-    formData.append('categoryID', categoryID);
-
-    try {
-      const response = await fetch(API.ADMIN.DELETE_CATEGORY_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.status === 404) {
-        toast.error(MESSAGE.DB_CONNECTION_ERROR);
-        return;
-      }
-
-      if (response.ok) {
-        const data = await response.json();
-        toast.success(data.message);
-
-        if (type === CATEGORY.PARENT_CATEGORY) {
-          setSelectedParentCategory(null);
-          setSelectedCategory(null);
-        }
-        if (type === CATEGORY.SUB_CATEGORY) {
-          setSelectedCategory(null);
-        }
-
-        fetchData().then(r => {});
-      } else {
-        const data = await response.json();
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-      console.error(error);
-    }
-  }
-
-  const handleDeleteCategoryClick = (categoryID, type) => {
-    deleteCategory(categoryID, type).then(r => {})
-  }
-
-  const editCategory = async (categoryID, categoryName) => {
-    if (categoryName === "") {
-      toast.warn(MESSAGE.MISSING_CATEGORY_NAME);
-      return;
-    }
-    if (!isStartWithLetter(categoryName)) {
-      toast.warn(MESSAGE.CATEGORY_NAME_INVALID);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('categoryID', categoryID);
-    formData.append('categoryName', categoryName);
-
-    try {
-      const response = await fetch(API.ADMIN.EDIT_CATEGORY_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.status === 404) {
-        toast.error(MESSAGE.DB_CONNECTION_ERROR);
-        return;
-      }
-
-      if (response.ok) {
-        const data = await response.json();
-        toast.success(data.message);
-        fetchData().then(r => { setEditingCategoryID(null) });
-      } else {
-        const data = await response.json();
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-      console.error(error);
-    }
-  }
-
-  const handleSaveEditCategoryClick = (categoryID) => {
-    editCategory(categoryID, inputValue).then(r => {});
-  }
-
   const handleEditCategoryClick = (e, categoryID, categoryName) => {
     e.stopPropagation();
     setIsAddingSubCategory(false);
@@ -373,7 +295,7 @@ const CategoryDialog = ({ onClose, onConfirm }) => {
                             </div>
                             <div data-v-38ab3376="" className="category-item-right">
                               <MdOutlineClose onClick={(e) => handleCancelCategoryClick(e)} className="btn-add pointer-cursor" style={{marginRight:"5px"}}/>
-                              <BsCheckLg onClick={handleSaveCategoryClick} className="btn-add pointer-cursor"/>
+                              <BsCheckLg className="btn-add pointer-cursor"/>
                             </div>
                           </li>
                           :
@@ -398,7 +320,7 @@ const CategoryDialog = ({ onClose, onConfirm }) => {
                               </div>
                               <div data-v-38ab3376="" className="category-item-right">
                                 <MdOutlineClose onClick={(e) => handleCancelCategoryClick(e)} className="btn-add pointer-cursor" style={{marginRight:"5px", color:"#bd0000"}}/>
-                                <BsCheckLg onClick={() => handleSaveEditCategoryClick(category.categoryID)} className="btn-add pointer-cursor"  style={{color:"#bd0000"}}/>
+                                <BsCheckLg className="btn-add pointer-cursor"  style={{color:"#bd0000"}}/>
                               </div>
                             </li>
                             :
@@ -435,7 +357,6 @@ const CategoryDialog = ({ onClose, onConfirm }) => {
                                           description={POPCONFIRM.DELETE_PARENT_CATEGORY_WARNING}
                                           okText={POPCONFIRM.DELETE}
                                           cancelText={POPCONFIRM.CANCEL}
-                                          onConfirm={() => handleDeleteCategoryClick(category.categoryID, CATEGORY.PARENT_CATEGORY)}
                                       >
                                         <HiOutlineTrash className="selected-category btn-delete pointer-cursor"/>
                                       </Popconfirm>
@@ -469,7 +390,7 @@ const CategoryDialog = ({ onClose, onConfirm }) => {
                                   </div>
                                   <div data-v-38ab3376="" className="category-item-right">
                                     <MdOutlineClose onClick={(e) => handleCancelSubCategoryClick(e)} className="btn-add pointer-cursor" style={{marginRight:"5px"}}/>
-                                    <BsCheckLg onClick={handleSaveSubCategoryClick} className="btn-add pointer-cursor"/>
+                                    <BsCheckLg className="btn-add pointer-cursor"/>
                                   </div>
                                 </li>
                                 :
@@ -497,7 +418,7 @@ const CategoryDialog = ({ onClose, onConfirm }) => {
                                 </div>
                                 <div data-v-38ab3376="" className="category-item-right">
                                   <MdOutlineClose onClick={(e) => handleCancelCategoryClick(e)} className="btn-add pointer-cursor" style={{marginRight:"5px", color:"#bd0000"}}/>
-                                  <BsCheckLg onClick={() => handleSaveEditCategoryClick(subCategory.categoryID)} className="btn-add pointer-cursor"  style={{color:"#bd0000"}}/>
+                                  <BsCheckLg className="btn-add pointer-cursor"  style={{color:"#bd0000"}}/>
                                 </div>
                               </li>
                               :
@@ -531,7 +452,6 @@ const CategoryDialog = ({ onClose, onConfirm }) => {
                                             description={POPCONFIRM.DELETE_SUB_CATEGORY_WARNING}
                                             okText={POPCONFIRM.DELETE}
                                             cancelText={POPCONFIRM.CANCEL}
-                                            onConfirm={() => handleDeleteCategoryClick(subCategory.categoryID, CATEGORY.SUB_CATEGORY)}
                                         >
                                           <HiOutlineTrash className="selected-category btn-delete pointer-cursor"/>
                                         </Popconfirm>

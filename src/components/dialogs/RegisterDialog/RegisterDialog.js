@@ -12,39 +12,6 @@ const RegisterDialog = ({ onClose, onSwitch }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('fullName', fullName);
-    formData.append('email', email);
-    formData.append('phoneNumber', phoneNumber);
-    formData.append('hashedPassword', hashedPassword);
-
-    try {
-      // Gửi dữ liệu đăng ký đến máy chủ, ví dụ sử dụng fetch hoặc axios
-      const response = await fetch(API.PUBLIC.REGISTER_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        toast.success(MESSAGE.REGISTRATION_SUCCESS)
-        handleSwitchToOtherDialog(DIALOGS.LOGIN)
-      } else {
-        // Đăng ký thất bại, có thể hiển thị thông báo lỗi
-        response.text().then(data => {
-          console.log(data);
-          // Hiển thị thông báo lỗi hoặc xử lý lỗi ở đây
-          const errorText = document.querySelector(".text-danger.error-text.password-register-error");
-          errorText.innerHTML = data;
-        });
-      }
-    } catch (error) {
-      // Xử lý lỗi khi gửi yêu cầu đăng ký
-      console.error(error.message);
-    }
   };
 
   const handleButtonCloseClick = () => {

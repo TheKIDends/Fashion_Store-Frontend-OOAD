@@ -3556,10 +3556,6 @@ const searchData = [
 ];
 
 const SearchProductPage = () => {
-  const location = useLocation().pathname;
-  const encodedSearchString = location.substring("/search/".length);
-  const decodedSearchString = decodeURIComponent(encodedSearchString);
-
   const [productsData, setProductsData] = useState([]);
   const [numberProduct, setNumberProduct] = useState(NUMBER_PRODUCT_LIMIT);
   const hasResult = true;
@@ -3641,7 +3637,7 @@ const SearchProductPage = () => {
               {hasResult ? (
                   <>
                     <div className="search-title">
-                      Có {productsData.length} kết quả cho từ khóa "{decodedSearchString}"
+                      Có {productsData.length} kết quả cho từ khóa "quan"
                     </div>
                     <div className="product-result">
                       <ProductsSection productsData={productsData.slice(0, numberProduct)} />

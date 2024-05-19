@@ -14,34 +14,6 @@ const EditOrderStatusDialog = ({orderID, orderStatus, onAccept, onClose}) => {
 
   const [selectedOrderStatus, setSelectedOrderStatus] = useState(orderStatus);
 
-  const handleEditOrderStatus = async () => {
-    const formData = new FormData();
-    formData.append('orderID', orderID);
-    formData.append('orderStatus', selectedOrderStatus);
-
-    try {
-      const response = await fetch(API.ADMIN.SET_ORDER_STATUS_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
-
-      if (response.status === 200) {
-        const data = await response.json();
-        toast.success(MESSAGE.SUCCESS_STATUS_CHANGE);
-        onAccept();
-      } else {
-        const data = await response.json();
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(MESSAGE.DB_CONNECTION_ERROR);
-      console.error(error);
-    }
-  }
-
   return (
       <div className="modal fade show" id="modal-auth" tabIndex="-1" aria-labelledby="exampleModalLabel"
            style={{ display: 'block', paddingLeft: '0px' }} aria-modal="true" role="dialog">
@@ -80,7 +52,7 @@ const EditOrderStatusDialog = ({orderID, orderStatus, onAccept, onClose}) => {
              </div>
 
             <div className="button-container" style={{marginTop:"40px"}}>
-              <button type="button" className="add-category-dialog-btn" onClick={handleEditOrderStatus}>{ORDER_LIST_PAGE.SAVE_BTN}</button>
+              <button type="button" className="add-category-dialog-btn">{ORDER_LIST_PAGE.SAVE_BTN}</button>
               <button type="button" className="add-category-dialog-btn add-category-dialog-btn-cancel" onClick={onClose}>{ORDER_LIST_PAGE.CANCEL_BTN}</button>
             </div>
           </div>
